@@ -25,7 +25,7 @@ function start(){
        type: "list",
        message: "What would you like to do?",
        choices: ["View all employees", "View Departments", "Add Department",
-       "View Managers","Add Employee","Create Role", "Update Employee", "Delete Employee"] 
+       "Add Employee", "Update Employee", "Delete Employee"] 
     })
     .then((answer) => {
         if (answer.functionChoice === "View all employees"){
@@ -115,7 +115,7 @@ function readDepartments(){
     });
 }
 // Function to create an employee entry
-    function addEmployee(){
+function addEmployee(){
       connection.query("SELECT * FROM departments", (err, results) => {
        if (err) throw err;  
         inquirer
@@ -155,9 +155,12 @@ function readDepartments(){
              });
          });
     });
-  }
+}
 // Function to update an employee's information
-
-
-
+function updateEmployee(){
+    console.log("Employee information updated...");
+}
 // Function to delete an employee from the database
+function deleteEmployee(){
+    console.log("Employee deleted from database...")
+}
