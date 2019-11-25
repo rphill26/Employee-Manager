@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
+const cTable = require('console.table');
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -23,7 +24,8 @@ function start(){
        name: "functionChoice",
        type: "list",
        message: "What would you like to do?",
-       choices: ["View all employees", "View Departments", "View Managers"] 
+       choices: ["View all employees", "View Departments", "Add Department",
+       "View Managers","Add Employee","Create Role", "Update Employee", "Delete Employee"] 
     })
     .then((answer) => {
         if (answer.functionChoice === "View all employees"){
@@ -34,9 +36,23 @@ function start(){
         }
         else if (answer.functionChoice === "View Managers"){
             readManagers();
-        } else {
+        }
+        else if (answer.functionChoice === "Add Department"){
+            addDepartment(); 
+        }
+        else if (answer.functionChoice === "Add Employee"){
+            addEmployee();
+        }
+        else if (answer.functionChoice === "Update Employee"){
+            updateEmployee();
+        } 
+        else if (answer.functionChoice === "Delete Employee"){
+            deleteEmployee();
+        }
+        else {
             connection.end();
         }
+        
     });
 }
 
@@ -65,7 +81,7 @@ function readAllEmployees() {
                     chosenEmployee = results[i];
                 }
             }
-            console.table(chosenEmployee);
+            console.table([chosenEmployee]);
         });
     });
 }
@@ -94,19 +110,52 @@ function readDepartments(){
                     chosenDepartment = results[i];
                 }
             }
-            console.table(chosenDepartment);
+            console.table([chosenDepartment]);
         });
     });
 }
-
-// Function to list all roles
-
-
-
 // Function to create an employee entry
-
-
-
+    function addEmployee(){
+      connection.query("SELECT * FROM departments", (err, results) => {
+       if (err) throw err;  
+        inquirer
+         .prompt([
+             {
+                 name: "firstName",
+                 type: "input", 
+                 message: "Enter their first name..."
+             },
+             {
+                 name: "lastName",
+                 type: "input",
+                 message: "Enter their last name..."
+             },
+             {
+                 name: "department",
+                 type: "list",
+                 choices: () => {
+                    var departmentArray = [];
+                    for (var i =0; i < results.length; i++){
+                        departmentArray.push(results[i].name);
+                    }
+                    return departmentArray;
+                },
+                message: "What department will they work for?"
+             }, 
+             {
+                name: "role",
+                type: "input",
+                message: "What is their role?"
+             }        
+         ]) 
+         .then((answer) => {
+             connection.query("INSERT INTO employees", (err, results) => {
+                if (err) throw err;
+                console.log("Employee successfully added...")
+             });
+         });
+    });
+  }
 // Function to update an employee's information
 
 
