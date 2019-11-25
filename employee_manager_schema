@@ -54,6 +54,14 @@ VALUES
 ("Head Accountant", 130000, 5),
 ("Accountant", 65000, 5);
 
+INSERT INTO employees(first_name, last_name)
+VALUES 
+("Randall", "Phillips"),
+("Chris", "Stephens"),
+("Zach", "Lundy"),
+("Chase", "Stephens"),
+("Keegan", "Downie");
+
 
 
 
