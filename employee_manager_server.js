@@ -15,8 +15,20 @@ connection.connect((err) => {
     start();
 });
 
-// Starting up the Employee Manager
+function returnDepartmentList() {
+    var departmentStr = "SELECT name FROM department";
+    return connection.query(departmentStr);
+}
+function returnRoleList() {
+    var roleStr = "SELECT title FROM roles";
+    return connection.query(roleStr);
+}
+function returnEmployeeList() {
+    var employeeStr = "SELECT first_name FROM employees";
+    return connection.query(employeeStr);
+}
 
+// Starting up the Employee Manager
 function start(){
     // Asks user what they want to do
     inquirer
@@ -29,7 +41,7 @@ function start(){
     })
     .then((answer) => {
         if (answer.functionChoice === "View Departments"){
-            readDepartments();
+            viewDepartments();
         }
         else if (answer.functionChoice === "View Managers"){
             readManagers();
@@ -62,65 +74,29 @@ function start(){
     });
 }
 
-// Function to list all employees in the database
-
-function readAllEmployees() {
-    connection.query("SELECT * FROM employees", (err, results) =>{
-        if (err) throw err;
-        inquirer
-        .prompt({
-            name: "employee",
-            type: "rawlist",
-            choices: () => {
-                var employeeArray = [];
-                for (var i =0; i < results.length; i++){
-                    employeeArray.push(results[i].first_name + " " + results[i].last_name);
-                }
-                return employeeArray;
+// Function to list all departments\
+async function viewDepartments(){
+    inquirer
+     .prompt([
+         {
+             name: "viewDepartments",
+             type: "list",
+             choices: await returnDepartmentList(),
+             message: "What departent would you like to view?"
+         }
+     ])
+     .then(function(answer) {
+         connection.query("SELECT * FROM department", 
+            {
+                name: answer.viewDepartments
             },
-            message: "Which employee would you like to view?"
-        })
-        .then((answer) => {
-            var chosenEmployee;
-            for (var i =0; i < results.length; i++){
-                if (results[i].first_name + " " + results[i].last_name === answer.employee) {
-                    chosenEmployee = results[i];
-                }
+            function (err) {
+                if (err) throw err;
+                start();
             }
-            console.table([chosenEmployee]);
-        });
-    });
+         );
+     })
 }
-
-// Function to list all departments
-
-function readDepartments(){
-    connection.query("SELECT * FROM departments", (err, results) => {
-        if (err) throw err;
-        inquirer
-        .prompt({
-            name: "department", 
-            type: "rawlist",
-            choices: () => {
-                var departmentArray = [];
-                for (var i =0; i < results.length; i++){
-                    departmentArray.push(results[i].name);
-                }
-                return departmentArray;
-            },
-        })
-        .then((answer) => {
-            var chosenDepartment;
-            for (var i =0; i < results.length; i++){
-                if (results[i].name === answer.department) {
-                    chosenDepartment = results[i];
-                }
-            }
-            console.table([chosenDepartment]);
-        });
-    });
-}
-
 // Function to add a Role
 function addRole(){
     inquirer
