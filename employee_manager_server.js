@@ -24,7 +24,7 @@ function start(){
        name: "functionChoice",
        type: "list",
        message: "What would you like to do?",
-       choices: ["View all employees", "View Departments", "Add Department",
+       choices: ["View all employees", "View Departments", "Add Department","Add Role",
        "Add Employee", "Update Employee", "Delete Employee"] 
     })
     .then((answer) => {
@@ -39,6 +39,9 @@ function start(){
         }
         else if (answer.functionChoice === "Add Department"){
             addDepartment(); 
+        }
+        else if (answer.functionChoice === "Add Role"){
+            addRole();
         }
         else if (answer.functionChoice === "Add Employee"){
             addEmployee();
@@ -114,6 +117,43 @@ function readDepartments(){
         });
     });
 }
+
+// Function to add a Role
+function addRole(){
+    inquirer
+     .prompt([
+         {
+            name: "addRole",
+            type: "input",
+            message: "What role would you like to add?"
+         },
+         {
+            name: "addRoleSalary",
+            type: "input",
+            message: "What is this role's Salary?"
+         },
+         {
+            name: "addRoleDepartment",
+            type: "input",
+            message: "What is the department ID?"
+         }
+     ])
+     .then(function(answer){
+         connection.query("INSERT INTO role SET ?",
+            {
+                title: answer.addRole,
+                salary: answer.addRoleSalary,
+                department_id: answer.addRoleDepartment
+            },
+            function (err) {
+                if (err) throw err;
+                console.log("You successfully added a role")
+                start();
+            }
+         );
+     })
+};
+
 // Function to create an employee entry
 function addEmployee(){
       connection.query("SELECT * FROM departments", (err, results) => {
