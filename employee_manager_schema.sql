@@ -2,65 +2,75 @@ CREATE DATABASE employee_manager_db;
 
 USE employee_manager_db;
 
-CREATE TABLE departments (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR (30)
+CREATE TABLE employee (
+  id INT NOT NULL AUTO_INCREMENT,
+  first_name VARCHAR(30) NOT NULL,
+  last_name VARCHAR(30) NOT NULL,
+  role VARCHAR(30) NOT NULL,
+  manager VARCHAR(30),
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE roles (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR (30),
-    salary DECIMAL,
-    department_id INT
+CREATE TABLE role (
+  id INT NOT NULL AUTO_INCREMENT,
+  title VARCHAR(30),
+  department VARCHAR(30),
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE employees (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    first_name VARCHAR (30),
-    last_name VARCHAR (30),
-    role_id INT,
-    manager_id INT
+CREATE TABLE department (
+  id INT AUTO_INCREMENT,
+  name VARCHAR(30),
+  PRIMARY KEY (id)
 );
 
-INSERT INTO departments (name)
-VALUES 
-("Marketing"),
-("Sales"),
-("Engineering"),
-("Legal"),
-("Accounting");
+INSERT INTO department (name)
+VALUES ("Sales");
 
-INSERT INTO roles (title, salary, department_id)
-VALUES 
+INSERT INTO department (name)
+VALUES ("Engineering");
 
--- Marketing Team --
-("Marketing Lead", 150000, 1),
-("Marketing Agent", 60000,1),
+INSERT INTO department (name)
+VALUES ("Finance");
 
--- Sales Team --
-("Sales Lead", 120000, 2),
-("Sales Agent", 50000,2),
+INSERT INTO department (name)
+VALUES ("Sales Lead");
 
--- Engineering Team --
-("Tech Lead", 200000, 3),
-("Senior Developer", 120000, 3),
-("Developer", 70000, 3),
+INSERT INTO role (title, department)
+VALUES ("Sales Lead", "Sales");
 
--- Legal Team --
-("Legal Lead", 120000, 4),
-("Lawyer", 100000, 4),
+INSERT INTO role (title, department)
+VALUES ("Salesperson", "Sales");
 
--- Accounting Team --
-("Head Accountant", 130000, 5),
-("Accountant", 65000, 5);
+INSERT INTO role (title, department)
+VALUES ("Lead Engineer", "Engineering");
 
-INSERT INTO employees(first_name, last_name)
-VALUES 
-("Randall", "Phillips"),
-("Chris", "Stephens"),
-("Zach", "Lundy"),
-("Chase", "Stephens"),
-("Keegan", "Downie");
+INSERT INTO role (title, department)
+VALUES ("Software Engineer", "Engineering");
+
+INSERT INTO role (title, department)
+VALUES ("Accountant", "Finance");
+
+INSERT INTO role (title, department)
+VALUES ("Legal Team Lead", "Legal");
+
+INSERT INTO employee (first_name, last_name, role, manager)
+VALUES ("John", "Doe", "Sales Lead", "Ashley Rodriguez");
+
+INSERT INTO employee (first_name, last_name, role, manager)
+VALUES ("Mike", "Chan", "Salesperson", "John Doe");
+
+INSERT INTO employee (first_name, last_name, role)
+VALUES ("Ashley", "Rodriguez", "Lead Engineer");
+
+INSERT INTO employee (first_name, last_name, role, manager)
+VALUES ("Kevin", "Tupik", "Software Engineer", "Ashley Rodriguez");
+
+INSERT INTO employee (first_name, last_name, role)
+VALUES ("Malia", "Brown", "Accountant");
+
+INSERT INTO employee (first_name, last_name, role)
+VALUES ("Sarah", "Lourd", "Legal Team Lead");
 
 
 
